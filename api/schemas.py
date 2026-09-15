@@ -2,7 +2,6 @@ from pydantic import BaseModel
 
 
 class PatientClassifyRequest(BaseModel):
-
     age: float | None = None
     bp: float | None = None
     sg: float | None = None
