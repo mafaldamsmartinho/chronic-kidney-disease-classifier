@@ -1,24 +1,46 @@
 import joblib
 import pandas as pd
 from api.schemas import ClassificationResponse, PatientClassifyRequest
-from fastapi import APIRouter
+from fastapi import APIRouter, FastAPI
+from fastapi.responses import FileResponse
 from src.predict import predict
 
 router = APIRouter()
+app = FastAPI()
 
-model = joblib.load("models/ckd_model.joblib")
+model = joblib.load("models/ckd.joblib")
 
-@router.post("/patient")
+
+@router.get("/")
+def home():
+    return FileResponse("templates/index.html")
+
+
+@router.post("/predict")
 def classify_patient_router(
     request: PatientClassifyRequest
      ) -> ClassificationResponse:
     """Classify patient ckd."""
-    patient_data = pd.DataFrame([request.model_dump()])
+    values = request.model_dump()
+    empty_count = sum(
+        value is None or (isinstance(value, str) and not value.strip())
+        for value in values.values()
+    )
+    if empty_count / len(values) >= 0.5:
+        return ClassificationResponse(prediction="Undefined")
+
+    patient_data = pd.DataFrame([values])
+    # Converts the data received by FastAPI into a one-row pandas DataFrame
     result = predict(model=model, data=patient_data)
     print("Classification Successfull")
     if result["prediction"].iloc[0] == 0:
-        outcome = "notckd"
+        outcome = "Not CKD"
     else:
-        outcome = "ckd"
+        outcome = "CKD"
+
+    print(outcome)
     return ClassificationResponse(
         prediction=outcome)
+
+
+app.include_router(router)

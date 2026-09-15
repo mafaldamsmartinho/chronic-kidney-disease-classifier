@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CKD Classifier</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 1000px; margin: 24px auto; padding: 0 16px; }
+        .form-columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; margin-bottom: 16px; }
+        .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 12px; align-items: center; }
+        .fields br { display: none; }
+        .fields input, .fields select { box-sizing: border-box; width: 100%; min-width: 0; padding: 4px; }
+        @media (max-width: 650px) { .form-columns { grid-template-columns: 1fr; } }
+    </style>
+</head>
+
+<body>
+
+<h1>Chronic Kidney Disease Classifier</h1>
+
+<form id="patient-form">
+    <div class="form-columns">
+    <section>
+    <h2>Numeric</h2>
+    <div class="fields">
+
+    <label>Age:</label>
+    <input type="number" name="age" step="any"><br><br>
+
+    <label>Blood Pressure:</label>
+    <input type="number" name="bp" step="any"><br><br>
+
+    <label>Specific Gravity:</label>
+    <input type="number" name="sg" step="any"><br><br>
+
+    <label>Albumin:</label>
+    <input type="number" name="al" step="any"><br><br>
+
+    <label>Sugar:</label>
+    <input type="number" name="su" step="any"><br><br>
+
+    <label>Blood Glucose Random:</label>
+    <input type="number" name="bgr" step="any"><br><br>
+
+    <label>Blood Urea:</label>
+    <input type="number" name="bu" step="any"><br><br>
+
+    <label>Serum Creatinine:</label>
+    <input type="number" name="sc" step="any"><br><br>
+
+    <label>Sodium:</label>
+    <input type="number" name="sod" step="any"><br><br>
+
+    <label>Potassium:</label>
+    <input type="number" name="pot" step="any"><br><br>
+
+    <label>Hemoglobin:</label>
+    <input type="number" name="hemo" step="any"><br><br>
+
+    <label>Packed Cell Volume:</label>
+    <input type="number" name="pcv" step="any"><br><br>
+
+    <label>White Blood Cell Count:</label>
+    <input type="number" name="wc" step="any"><br><br>
+
+    <label>Red Blood Cell Count:</label>
+    <input type="number" name="rc" step="any"><br><br>
+
+
+    </div>
+    </section>
+    <section>
+    <h2>Categorical</h2>
+    <div class="fields">
+    <label>Red Blood Cells:</label>
+    <select name="rbc">
+        <option value="">Unknown / Missing</option>
+        <option value="normal">Normal</option>
+        <option value="abnormal">Abnormal</option>
+    </select><br><br>
+
+    <label>Pus Cell:</label>
+    <select name="pc">
+        <option value="">Unknown / Missing</option>
+        <option value="normal">Normal</option>
+        <option value="abnormal">Abnormal</option>
+    </select><br><br>
+
+    <label>Pus Cell Clumps:</label>
+    <select name="pcc">
+        <option value="">Unknown / Missing</option>
+        <option value="notpresent">Not Present</option>
+        <option value="present">Present</option>
+    </select><br><br>
+
+    <label>Bacteria:</label>
+    <select name="ba">
+        <option value="">Unknown / Missing</option>
+        <option value="notpresent">Not Present</option>
+        <option value="present">Present</option>
+    </select><br><br>
+
+    <label>Hypertension:</label>
+    <select name="htn">
+        <option value="">Unknown / Missing</option>
+        <option value="no">No</option>
+        <option value="yes">Yes</option>
+    </select><br><br>
+
+    <label>Diabetes Mellitus:</label>
+    <select name="dm">
+        <option value="">Unknown / Missing</option>
+        <option value="no">No</option>
+        <option value="yes">Yes</option>
+    </select><br><br>
+
+    <label>Coronary Artery Disease:</label>
+    <select name="cad">
+        <option value="">Unknown / Missing</option>
+        <option value="no">No</option>
+        <option value="yes">Yes</option>
+    </select><br><br>
+
+    <label>Appetite:</label>
+    <select name="appet">
+        <option value="">Unknown / Missing</option>
+        <option value="good">Good</option>
+        <option value="poor">Poor</option>
+    </select><br><br>
+
+    <label>Pedal Edema:</label>
+    <select name="pe">
+        <option value="">Unknown / Missing</option>
+        <option value="no">No</option>
+        <option value="yes">Yes</option>
+    </select><br><br>
+
+    <label>Anemia:</label>
+    <select name="ane">
+        <option value="">Unknown / Missing</option>
+        <option value="no">No</option>
+        <option value="yes">Yes</option>
+    </select><br><br>
+
+    </div>
+    </section>
+    </div>
+
+    <button type="submit">Predict</button>
+
+</form>
+
+<h2 id="result"></h2>
+
+
+<script>
+document.getElementById("patient-form").addEventListener("submit", async function(event) {
+
+    event.preventDefault();
+
+    const form = new FormData(event.target);
+    const patient = Object.fromEntries(form.entries());
+
+    // Convert numerical inputs from strings to numbers
+    const numericFields = [
+        "age", "bp", "sg", "al", "su",
+        "bgr", "bu", "sc", "sod", "pot",
+        "hemo", "pcv", "wc", "rc"
+    ];
+
+    numericFields.forEach(field => {
+        patient[field] = patient[field] === "" ? null : Number(patient[field]);
+    });
+
+    const output = document.getElementById("result");
+    output.innerText = "Predicting...";
+
+    try {
+    const response = await fetch("/predict", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(patient)
+    });
+
+    if (!response.ok) {
+        throw new Error("Request failed (" + response.status + "): " + await response.text());
+    }
+
+    const result = await response.json();
+    output.innerText = "Prediction: " + result.prediction;
+    } catch (error) {
+        output.innerText = "Could not predict: " + error.message +
+            ". Open this page through your API server (http://127.0.0.1:8000/).";
+    }
+});
+</script>
+
+</body>
+</html>
