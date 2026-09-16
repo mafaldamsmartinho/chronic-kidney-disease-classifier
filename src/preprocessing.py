@@ -6,12 +6,29 @@ from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
-
 NUMERIC_COLUMNS = [
-    "age", "bp", "bgr", "bu", "sc", "sod", "pot", "hemo", "pcv", "wc", "rc",
+    "age",
+    "bp",
+    "bgr",
+    "bu",
+    "sc",
+    "sod",
+    "pot",
+    "hemo",
+    "pcv",
+    "wc",
+    "rc",
 ]
 CATEGORICAL_COLUMNS = [
-    "pc", "pcc", "ba", "htn", "dm", "cad", "appet", "pe", "ane",
+    "pc",
+    "pcc",
+    "ba",
+    "htn",
+    "dm",
+    "cad",
+    "appet",
+    "pe",
+    "ane",
 ]
 DISCRETE_COLUMNS = ["sg", "al", "su"]
 
@@ -37,24 +54,39 @@ def median_columns(data):
 
 def build_preprocessor():
     """Learn imputation and encoding from training observations only."""
+
     def numeric_pipeline(strategy):
-        return Pipeline([
-            ("imputer", SimpleImputer(strategy=strategy, keep_empty_features=True)),
-            ("scaler", StandardScaler()),
-        ])
+        return Pipeline(
+            [
+                ("imputer", SimpleImputer(strategy=strategy, keep_empty_features=True)),
+                ("scaler", StandardScaler()),
+            ]
+        )
 
     def categorical_pipeline(strategy="most_frequent"):
-        return Pipeline([
-            ("imputer", SimpleImputer(
-                strategy=strategy, fill_value="unknown", keep_empty_features=True,
-            )),
-            ("encoder", OneHotEncoder(handle_unknown="ignore", sparse_output=False)),
-        ])
+        return Pipeline(
+            [
+                (
+                    "imputer",
+                    SimpleImputer(
+                        strategy=strategy,
+                        fill_value="unknown",
+                        keep_empty_features=True,
+                    ),
+                ),
+                (
+                    "encoder",
+                    OneHotEncoder(handle_unknown="ignore", sparse_output=False),
+                ),
+            ]
+        )
 
-    return ColumnTransformer([
-        ("mean", numeric_pipeline("mean"), mean_columns),
-        ("median", numeric_pipeline("median"), median_columns),
-        ("categorical", categorical_pipeline(), CATEGORICAL_COLUMNS),
-        ("discrete", categorical_pipeline(), DISCRETE_COLUMNS),
-        ("rbc", categorical_pipeline("constant"), ["rbc"]),
-    ])
+    return ColumnTransformer(
+        [
+            ("mean", numeric_pipeline("mean"), mean_columns),
+            ("median", numeric_pipeline("median"), median_columns),
+            ("categorical", categorical_pipeline(), CATEGORICAL_COLUMNS),
+            ("discrete", categorical_pipeline(), DISCRETE_COLUMNS),
+            ("rbc", categorical_pipeline("constant"), ["rbc"]),
+        ]
+    )

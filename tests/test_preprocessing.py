@@ -1,28 +1,30 @@
 import pandas as pd
+from sklearn.compose import ColumnTransformer
 
-from sklearn.compose import ColumnTransformer 
 from src.preprocessing import (
     CATEGORICAL_COLUMNS,
     DISCRETE_COLUMNS,
     NUMERIC_COLUMNS,
+    build_preprocessor,
     clean_data,
     mean_columns,
     median_columns,
-    build_preprocessor,
 )
 
 
 def test_clean_data():
-    data = pd.DataFrame({
-        **{column: ["1"] for column in NUMERIC_COLUMNS + DISCRETE_COLUMNS},
-        **{column: ["yes"] for column in CATEGORICAL_COLUMNS},
-        "id": [1],
-        "classification": ["ckd"],
-        "age": [" 45 "],
-        "bp": ["80"],
-        "rbc": [" normal "],
-        "htn": [" yes "],
-    })
+    data = pd.DataFrame(
+        {
+            **{column: ["1"] for column in NUMERIC_COLUMNS + DISCRETE_COLUMNS},
+            **{column: ["yes"] for column in CATEGORICAL_COLUMNS},
+            "id": [1],
+            "classification": ["ckd"],
+            "age": [" 45 "],
+            "bp": ["80"],
+            "rbc": [" normal "],
+            "htn": [" yes "],
+        }
+    )
 
     cleaned = clean_data(data)
 
@@ -42,11 +44,13 @@ def test_clean_data():
 
 def test_mean_median_columns():
 
-    data = pd.DataFrame({
-        **{column: [48, 50, 52] for column in NUMERIC_COLUMNS},
-        "age": [48, 50, 52],   # fairly symmetric → mean
-        "bp": [2, 4, 50],      # skewed → median
-    })
+    data = pd.DataFrame(
+        {
+            **{column: [48, 50, 52] for column in NUMERIC_COLUMNS},
+            "age": [48, 50, 52],  # fairly symmetric → mean
+            "bp": [2, 4, 50],  # skewed → median
+        }
+    )
 
     mean_cols = mean_columns(data)
     median_cols = median_columns(data)
@@ -61,9 +65,7 @@ def test_build_preprocessor():
 
     assert isinstance(preprocessor, ColumnTransformer)
 
-    transformer_names = [
-        name for name, _, _ in preprocessor.transformers
-    ]
+    transformer_names = [name for name, _, _ in preprocessor.transformers]
 
     assert transformer_names == [
         "mean",

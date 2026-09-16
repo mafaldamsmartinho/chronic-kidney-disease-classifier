@@ -8,9 +8,12 @@ import pandas as pd
 
 def predict(model, data):
     """Return class labels (1 = CKD, 0 = not CKD)."""
-    return pd.DataFrame({
-        "prediction": model.predict(data).astype(int),
-    }, index=data.index)
+    return pd.DataFrame(
+        {
+            "prediction": model.predict(data).astype(int),
+        },
+        index=data.index,
+    )
 
 
 if __name__ == "__main__":

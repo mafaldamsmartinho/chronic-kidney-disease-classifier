@@ -1,8 +1,9 @@
 import joblib
 import pandas as pd
-from api.schemas import ClassificationResponse, PatientClassifyRequest
 from fastapi import APIRouter, FastAPI
 from fastapi.responses import FileResponse
+
+from api.schemas import ClassificationResponse, PatientClassifyRequest
 from src.predict import predict
 
 router = APIRouter()
@@ -17,9 +18,7 @@ def home():
 
 
 @router.post("/predict")
-def classify_patient_router(
-    request: PatientClassifyRequest
-     ) -> ClassificationResponse:
+def classify_patient_router(request: PatientClassifyRequest) -> ClassificationResponse:
     """Classify patient ckd."""
     values = request.model_dump()
     empty_count = sum(
@@ -39,8 +38,7 @@ def classify_patient_router(
         outcome = "CKD"
 
     print(outcome)
-    return ClassificationResponse(
-        prediction=outcome)
+    return ClassificationResponse(prediction=outcome)
 
 
 app.include_router(router)

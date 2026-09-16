@@ -11,10 +11,12 @@ class FakeModel:
 
 def test_predict():
 
-    data = pd.DataFrame({
-        "age": [50, 30],
-        "bp": [90, 70],
-    })
+    data = pd.DataFrame(
+        {
+            "age": [50, 30],
+            "bp": [90, 70],
+        }
+    )
 
     model = FakeModel()
 
