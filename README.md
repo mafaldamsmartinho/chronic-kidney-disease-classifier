@@ -1,20 +1,51 @@
-# chronic-kidney-disease-classifier
-Machine learning classification project using a Chronic Kidney Disease dataset, covering data cleaning, preprocessing, model comparison, cross-validation, and classification performance evaluation.
+# Chronic Kidney Disease Classifier
 
-The `src` scripts use the SVM selected in the notebook (`SVC()`), with its
-default decision rule.
+End-to-end machine learning project for Chronic Kidney Disease classification, covering data preprocessing, model comparison, evaluation, API development, and containerized deployment.
 
-- `preprocessing.py`: clean values, impute missing data, scale numeric features, and encode categories.
-- `train.py`: train on a stratified 80% split, report test metrics, and save the fitted pipeline.
-- `predict.py`: return predictions (`1` = CKD, `0` = not CKD).
+## Tech Stack
 
-Install dependencies and run from the project root:
+Python · scikit-learn · FastAPI · Pydantic · pytest · Docker
 
-```sh
-pip install pandas "scikit-learn>=1.2" joblib
-python -m src.train
-python -m src.predict "kidney_disease .csv"
+## Model
+
+The final model is an SVM (`SVC`) selected after comparing classification models using stratified cross-validation.
+
+The saved pipeline includes:
+
+* Data cleaning
+* Missing-value imputation
+* Numerical scaling
+* Categorical encoding
+* Trained classifier
+
+Predictions:
+
+* `1` — CKD
+* `0` — Not CKD
+
+## Run with Docker
+
+Clone the repository and build the image:
+
+```bash
+docker build -t ckd-classifier .
 ```
 
-Prediction CSVs need the original 24 predictor columns; `id` and `classification`
-are optional. The saved pipeline includes cleaning and fitted preprocessing.
+Run the container:
+
+```bash
+docker run -p 8000:8000 ckd-classifier
+```
+
+Open:
+
+```text
+http://localhost:8000
+```
+
+## Tests
+
+```bash
+pytest
+```
+

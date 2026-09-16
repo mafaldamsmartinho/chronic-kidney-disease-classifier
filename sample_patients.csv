@@ -1,4 +1,0 @@
-id,age,bp,sg,al,su,rbc,pc,pcc,ba,bgr,bu,sc,sod,pot,hemo,pcv,wc,rc,htn,dm,cad,appet,pe,ane
-401,45,80,1.020,0,0,normal,normal,notpresent,notpresent,110,30,1.0,140,4.2,15.0,45,7500,5.0,no,no,no,good,no,no
-402,67,90,1.010,3,1,abnormal,abnormal,present,notpresent,220,80,3.2,132,5.1,9.8,30,11200,3.4,yes,yes,no,poor,yes,yes
-403,55,70,1.015,1,0,normal,normal,notpresent,notpresent,135,42,1.4,138,4.5,13.2,40,8200,4.6,no,yes,no,good,no,no
