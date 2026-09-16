@@ -44,6 +44,7 @@ def clean_data(data):
 
 
 def mean_columns(data):
+    # Select mean imputation for near-symmetric features using only the fit data.
     skewness = data[NUMERIC_COLUMNS].skew()
     return skewness.index[skewness.abs() < 0.5].tolist()
 
@@ -87,6 +88,7 @@ def build_preprocessor():
             ("median", numeric_pipeline("median"), median_columns),
             ("categorical", categorical_pipeline(), CATEGORICAL_COLUMNS),
             ("discrete", categorical_pipeline(), DISCRETE_COLUMNS),
+            # Preserve missing RBC results as "unknown" rather than the modal result.
             ("rbc", categorical_pipeline("constant"), ["rbc"]),
         ]
     )
