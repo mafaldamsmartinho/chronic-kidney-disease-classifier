@@ -1,0 +1,16 @@
+.venv/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.git/
+.github/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+notebooks/
+tests/
+
+check.ps1
+kidney_disease.csv
+README.md
