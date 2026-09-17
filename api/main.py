@@ -25,6 +25,7 @@ def classify_patient_router(request: PatientClassifyRequest) -> ClassificationRe
         value is None or (isinstance(value, str) and not value.strip())
         for value in values.values()
     )
+    # Application completeness rule, not a calibrated confidence threshold.
     if empty_count / len(values) >= 0.5:
         return ClassificationResponse(prediction="Undefined")
 

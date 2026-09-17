@@ -23,6 +23,19 @@ Predictions:
 - `1` — CKD
 - `0` — Not CKD
 
+## Results
+
+The dataset contains 400 records: 320 for training and five-fold stratified cross-validation, and 80 for held-out testing. CKD is the positive class.
+
+| SVM evaluation | Accuracy | Precision | Recall | F1 |
+|---|---:|---:|---:|---:|
+| Cross-validation mean | 1.00 | 1.00 | 1.00 | 1.00 |
+| Held-out test | 1.00 | 1.00 | 1.00 | 1.00 |
+
+## Limitations
+
+These results come from one small dataset without external validation; perfect scores do not establish performance on new populations or suitability for clinical use. The API's 50% missing-input cutoff is an application rule, not a validated confidence threshold.
+
 ## Run with Docker
 
 Clone the repository and build the image:
@@ -34,13 +47,13 @@ docker build -t ckd-classifier .
 Run the container:
 
 ```bash
-docker run -p 8000:8000 ckd-classifier
+docker run -p 8080:8080 ckd-classifier
 ```
 
 Open:
 
 ```text
-http://localhost:8000
+http://localhost:8080
 ```
 
 ## Tests
@@ -92,8 +105,7 @@ gcloud artifacts repositories list
 
 ### 4. Configure `.gcloudignore`
 
-Keep the files required for deployment:
-
+Use the included `.gcloudignore` to exclude notebooks, tests, caches, and the training dataset (`kidney_disease .csv`) from the upload. Keep `Dockerfile`, `requirements.txt`, `src/`, `api/`, `models/`, and `templates/`, which are required to build and run the application.
 
 ### 5. Check the Cloud Build service account
 

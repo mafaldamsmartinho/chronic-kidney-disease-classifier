@@ -23,6 +23,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     model = joblib.load(args.model)
-    data = pd.read_csv("sample_patients.csv")
+    data = pd.read_csv(args.data)
     predictions = predict(model, data)
     print(predictions.to_csv(index=False, lineterminator="\n"), end="")
