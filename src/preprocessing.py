@@ -1,5 +1,6 @@
 """Cleaning and preprocessing used by both training and prediction."""
 
+import numpy as np
 import pandas as pd
 from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
@@ -39,7 +40,12 @@ def clean_data(data):
     for column in NUMERIC_COLUMNS + DISCRETE_COLUMNS:
         data[column] = pd.to_numeric(data[column], errors="coerce").astype(float)
     for column in CATEGORICAL_COLUMNS + ["rbc"]:
-        data[column] = data[column].astype(object).str.strip()
+        data[column] = (
+            data[column]
+            .astype(object)
+            .str.strip()
+            .mask(lambda s: s.isna() | s.eq(""), np.nan)
+        )
     return data
 
 

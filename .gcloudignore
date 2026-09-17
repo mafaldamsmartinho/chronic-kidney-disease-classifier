@@ -12,5 +12,5 @@ notebooks/
 tests/
 
 check.ps1
-kidney_disease.csv
+kidney_disease .csv
 README.md
