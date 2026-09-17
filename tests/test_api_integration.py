@@ -10,32 +10,32 @@ from src.preprocessing import CATEGORICAL_COLUMNS
 
 @pytest.fixture
 def patient():
-    return dict(
-        age=45,
-        bp=80,
-        sg=1.020,
-        al=0,
-        su=0,
-        bgr=100,
-        bu=30,
-        sc=1.0,
-        sod=140,
-        pot=4.5,
-        hemo=15,
-        pcv=45,
-        wc=8000,
-        rc=5,
-        rbc="normal",
-        pc="normal",
-        pcc="notpresent",
-        ba="notpresent",
-        htn="no",
-        dm="no",
-        cad="no",
-        appet="good",
-        pe="no",
-        ane="no",
-    )
+    return {
+        "age": 45,
+        "bp": 80,
+        "sg": 1.020,
+        "al": 0,
+        "su": 0,
+        "bgr": 100,
+        "bu": 30,
+        "sc": 1.0,
+        "sod": 140,
+        "pot": 4.5,
+        "hemo": 15,
+        "pcv": 45,
+        "wc": 8000,
+        "rc": 5,
+        "rbc": "normal",
+        "pc": "normal",
+        "pcc": "notpresent",
+        "ba": "notpresent",
+        "htn": "no",
+        "dm": "no",
+        "cad": "no",
+        "appet": "good",
+        "pe": "no",
+        "ane": "no",
+    }
 
 
 @pytest.mark.parametrize(

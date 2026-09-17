@@ -41,7 +41,10 @@ def clean_data(data):
         data[column] = pd.to_numeric(data[column], errors="coerce").astype(float)
     for column in CATEGORICAL_COLUMNS + ["rbc"]:
         data[column] = (
-            data[column].astype(object).str.strip().mask(lambda s: s.isna() | s.eq(""), np.nan)
+            data[column]
+            .astype(object)
+            .str.strip()
+            .mask(lambda s: s.isna() | s.eq(""), np.nan)
         )
     return data
 
